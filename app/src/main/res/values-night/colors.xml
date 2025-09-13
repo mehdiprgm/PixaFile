@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--    <color name="theme">#00FA9A</color>-->
+
+    <color name="background">#242739</color>
+    <color name="foreground">#EBE7D0</color>
+    <color name="foreground_less">#B2B2B2</color>
+    <color name="gray">#2E3149</color>
+
+    <color name="panelBackground">#31354E</color>
+    <color name="panelBackground2">#31354E</color>
+    <color name="iconColor">#EBE7D0</color>
+</resources>

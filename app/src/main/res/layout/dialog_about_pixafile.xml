@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/panelBackground"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgIcon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvAppName"
+            style="@style/TextBig"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/imgIcon"
+            app:layout_constraintStart_toStartOf="@+id/imgIcon"
+            app:layout_constraintTop_toBottomOf="@+id/imgIcon" />
+
+        <TextView
+            android:id="@+id/tvAppVersion"
+            style="@style/TextSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="1.0"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvAppName"
+            app:layout_constraintStart_toEndOf="@+id/tvAppName" />
+
+        <TextView
+            android:id="@+id/tvAppDescription"
+            style="@style/TextNormal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="File manager allows you to easily manage your device files, also use category to seperate your files.\nYou can also delete, create or move files."
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvAppName" />
+
+        <View
+            android:id="@+id/viewSep1"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="50dp"
+            android:background="@color/foreground_less"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvAppDescription" />
+
+        <TextView
+            android:id="@+id/tvDeveloperTitle"
+            style="@style/TextNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Developer information"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tvAppDescription"
+            app:layout_constraintTop_toBottomOf="@+id/viewSep1" />
+
+        <TextView
+            android:id="@+id/tvDeveloperInformation"
+            style="@style/TextNormal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:text="I am mehdi, 25 years old software engineer living in Iran,Karaj city.\n\nLove programming and helping people to build new thing and make world better place."
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvDeveloperTitle"
+            app:layout_constraintTop_toBottomOf="@+id/tvDeveloperTitle" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDeveloperInformation">
+
+            <ImageView
+                android:id="@+id/imgGmail"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_google" />
+
+            <ImageView
+                android:id="@+id/imgTelegram"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_telegram" />
+
+            <ImageView
+                android:id="@+id/imgInstagram"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_instagram" />
+
+            <ImageView
+                android:id="@+id/imgGithub"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_github" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

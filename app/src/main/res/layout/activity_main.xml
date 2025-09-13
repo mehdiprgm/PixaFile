@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MainActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layTop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/theme"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btnMenu"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="@string/text_btn"
+                    android:src="@drawable/ic_menu2"
+                    app:backgroundTint="@android:color/transparent"
+                    app:elevation="0dp"
+                    app:fabCustomSize="30dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/black" />
+
+                <TextView
+                    android:id="@+id/tvAppTitle"
+                    style="@style/TextBig"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="@+id/btnMenu"
+                    app:layout_constraintStart_toEndOf="@+id/btnMenu"
+                    app:layout_constraintTop_toTopOf="@+id/btnMenu" />
+
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btnDelete"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="@string/text_btn"
+                    android:src="@drawable/ic_trash"
+                    app:backgroundTint="@android:color/transparent"
+                    app:elevation="0dp"
+                    app:fabCustomSize="30dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvAppTitle"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvAppTitle"
+                    app:tint="@color/black" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btnCopyPath"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="@string/text_btn"
+                    android:src="@drawable/ic_copy"
+                    app:backgroundTint="@android:color/transparent"
+                    app:elevation="0dp"
+                    app:fabCustomSize="30dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvAppTitle"
+                    app:layout_constraintEnd_toStartOf="@+id/btnDelete"
+                    app:layout_constraintTop_toTopOf="@+id/tvAppTitle"
+                    app:tint="@color/black" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btnEncrypt"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="@string/text_btn"
+                    android:src="@drawable/ic_lock"
+                    app:backgroundTint="@android:color/transparent"
+                    app:elevation="0dp"
+                    android:visibility="gone"
+                    app:fabCustomSize="30dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvAppTitle"
+                    app:layout_constraintEnd_toStartOf="@+id/btnCopyPath"
+                    app:layout_constraintTop_toTopOf="@+id/tvAppTitle"
+                    app:tint="@color/black" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <EditText
+                android:id="@+id/txtSearch"
+                style="@style/TextNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/edittext_search"
+                android:drawableStart="@drawable/ic_search"
+                android:hint="Search"
+                android:singleLine="true"
+                android:padding="6dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layTop" />
+
+            <HorizontalScrollView
+                android:id="@+id/scrollButtons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:fillViewport="true"
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtSearch">
+
+                <LinearLayout
+                    android:id="@+id/layPathButtonsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcMain"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scrollButtons" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieEmpty"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="30dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/empty_box"
+                app:lottie_speed="2" />
+
+            <TextView
+                android:id="@+id/tvEmpty"
+                style="@style/TextSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Noting found"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/lottieEmpty"
+                app:layout_constraintStart_toStartOf="@+id/lottieEmpty"
+                app:layout_constraintTop_toBottomOf="@+id/lottieEmpty" />
+
+            <TextView
+                android:id="@+id/tvAdd"
+                style="@style/TextSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Press + button to add new item"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/lottieEmpty"
+                app:layout_constraintStart_toStartOf="@+id/lottieEmpty"
+                app:layout_constraintTop_toBottomOf="@+id/tvEmpty" />
+
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnSettings"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/theme"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_edit"
+                app:elevation="10dp"
+                app:fabCustomSize="40dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/black" />
+
+            <TextView
+                android:id="@+id/tvRefresh"
+                style="@style/TextSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/button_option_background"
+                android:drawableStart="@drawable/ic_refresh"
+                android:elevation="10dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Refresh"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:drawableTint="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/btnSettings"
+                app:layout_constraintEnd_toStartOf="@+id/btnSettings"
+                app:layout_constraintTop_toTopOf="@+id/btnSettings" />
+
+            <TextView
+                android:id="@+id/tvNewFolder"
+                style="@style/TextSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/button_option_background"
+                android:elevation="10dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="New folder"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:drawableStartCompat="@drawable/ic_add"
+                app:drawableTint="@color/black"
+                app:layout_constraintBottom_toTopOf="@+id/btnSettings"
+                app:layout_constraintEnd_toEndOf="@+id/btnSettings" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:itemIconPadding="20dp"
+        app:itemIconSize="25dp"
+        app:itemIconTint="@null"
+        app:itemTextAppearance="@style/TextNormal"
+        app:menu="@menu/menu_main" />
+
+
+</androidx.drawerlayout.widget.DrawerLayout>

@@ -1,0 +1,102 @@
+/* count all files in a directory including subdirectories
+FileUtils.listFiles(it, null, true).size.toLong()
+/* count all files in a directory including subdirectories
+
+
+/* MyBottomSheetDialog Class
+package org.zendev.pixafile.activity
+
+import android.app.Dialog
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import org.zendev.pixafile.R
+
+class MyBottomSheetDialog : BottomSheetDialogFragment() {
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+
+        // Disable dragging and swiping the bottom sheet down to dismiss it.
+        // It will only be dismissible via the back button or a manual dismiss call.
+        dialog.behavior.isDraggable = false
+
+        return dialog
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the custom layout for the bottom sheet
+        return inflater.inflate(R.layout.bottom_sheet_dialog, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Find the close button from the custom layout
+        val closeButton = view.findViewById<Button>(R.id.btn_close)
+
+        // Set an OnClickListener to the close button
+        closeButton.setOnClickListener {
+            // Dismiss the dialog when the button is clicked
+            dismiss()
+        }
+
+        // The dialog can only be dismissed by the back button or the close button,
+        // as we have made it non-canceleable by default.
+        isCancelable = false
+    }
+}
+
+/* MyBottomSheetDialog Class
+
+
+/* BottomSheetDialog Layout file
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/bottom_sheet_dialog_background"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:text="Custom Bottom Sheet"
+        style="@style/TextBig" />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_width="match_parent"
+        android:text="This is a custom layout for a Bottom Sheet Dialog. You can place any UI elements you need here."
+        style="@style/TextNormal" />
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="Close" />
+
+</LinearLayout>
+/* BottomSheetDialog Layout file
+
+
+/* BottomSheetDialog background
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/background" />
+    <corners android:topLeftRadius="16dp" android:topRightRadius="16dp" />
+</shape>
+/* BottomSheetDialog background

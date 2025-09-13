@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BaseText">
+        <item name="fontFamily">@font/inter</item>
+        <item name="android:textColor">@color/foreground</item>
+        <item name="android:drawablePadding">6dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextSmall" parent="BaseText">
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="TextNormal" parent="BaseText">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextBig" parent="BaseText">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="TextExtra" parent="BaseText">
+        <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="CardViewStyle">
+        <item name="cardElevation">2dp</item>
+        <item name="cardCornerRadius">5dp</item>
+    </style>
+
+    <style name="CardViewStyle2">
+        <item name="cardElevation">5dp</item>
+        <item name="cardCornerRadius">5dp</item>
+        <item name="android:outlineAmbientShadowColor">@color/theme</item>
+        <item name="android:outlineSpotShadowColor">@color/theme</item>
+    </style>
+
+    <style name="ButtonStyle" parent="TextNormal">
+        <item name="cornerRadius">20dp</item>
+        <item name="backgroundTint">@color/theme</item>
+    </style>
+
+    <style name="CircleImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+</resources>
