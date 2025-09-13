@@ -1,13 +1,12 @@
 package org.zendev.pixafile.activity
 
-import android.Manifest
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.TypedValue
 import android.view.MenuItem
@@ -29,6 +28,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
+import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +36,7 @@ import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.launch
+import org.apache.commons.io.FileUtils
 import org.zendev.pixafile.Dialog
 import org.zendev.pixafile.R
 import org.zendev.pixafile.adapter.FileAdapter
@@ -43,6 +44,7 @@ import org.zendev.pixafile.databinding.ActivityMainBinding
 import org.zendev.pixafile.filesystem.ItemType
 import org.zendev.pixafile.filesystem.ViewModel
 import org.zendev.pixafile.filesystem.models.ZFile
+import org.zendev.pixafile.tools.copyTextToClipboard
 import org.zendev.pixafile.tools.disableScreenPadding
 import org.zendev.pixafile.tools.getAllViews
 import org.zendev.pixafile.tools.getDeviceStoragePath
@@ -79,6 +81,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
         }
     }
 
+    private val openDirectory =
+        registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+            // The user has selected a directory. Handle the URI.
+            if (uri != null) {
+                // Now you have a URI representing the directory.
+                // You can persist this permission for future use.
+                contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+
+                // Delete the directory's contents using its URI
+                deleteDirectory(uri)
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -97,6 +115,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
 
         b.btnMenu.setOnClickListener(this)
         b.btnSettings.setOnClickListener(this)
+        b.btnDelete.setOnClickListener(this)
+        b.btnCopyPath.setOnClickListener(this)
 
         b.tvRefresh.setOnClickListener(this)
         b.tvNewFolder.setOnClickListener(this)
@@ -146,8 +166,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
                                     "Creation failed",
                                     "Failed to create new folder"
                                 )
-                            } else {
-                                /* Only update the folder content if we create new folder on the same path */
+                            } else {/* Only update the folder content if we create new folder on the same path */
                                 if (newFolder.path == currentFile.path) {
                                     loadFiles(currentFile)
                                 }
@@ -166,6 +185,54 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
                     b.main.openDrawer(GravityCompat.START)
                 }
             }
+
+            /* lots of bugs here */
+            R.id.btnDelete -> {
+                if (selectedItems.isNotEmpty()) {
+                    lifecycleScope.launch {
+                        if (Dialog.ask(
+                                this@MainActivity,
+                                R.drawable.ic_trash,
+                                "Delete selected items",
+                                "Are you sure you want to delete these files?\n\nYou can recover these files after delete."
+                            )
+                        ) {
+                            for (item in selectedItems.keys) {
+                                if (item.isFolder) {
+                                    val directoryUri =
+                                        "content://com.android.externalstorage.documents/tree/primary%3A${
+                                            item.path.replace(
+                                                "/storage/emulated/0/", ""
+                                            )
+                                        }".toUri()
+
+                                    openDirectory.launch(directoryUri)
+                                } else {
+                                    File(item.path).delete()
+                                }
+                            }
+
+                            disableSelectionMode()
+                            loadFiles(currentFile)
+                        }
+                    }
+                }
+            }
+
+            R.id.btnCopyPath -> {
+                val sb = StringBuilder()
+
+                if (selectedItems.isNotEmpty()) {
+                    for (item in selectedItems.keys) {
+                        sb.append(item.path).append("\n")
+                    }
+
+                    copyTextToClipboard(this, "Paths", sb.toString())
+                    disableSelectionMode()
+
+                    Toast.makeText(this, "All paths copied to the clipboard", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -178,6 +245,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
         }
 
         return true
+    }
+
+    private fun deleteDirectory(directoryUri: Uri) {
+        val documentFile = DocumentFile.fromTreeUri(this, directoryUri)
+        if (documentFile != null && documentFile.exists() && documentFile.isDirectory) {
+            // Recursively delete all children
+            documentFile.listFiles().forEach { childFile ->
+                childFile.delete()
+            }
+            // Then delete the empty directory itself
+            documentFile.delete()
+        }
     }
 
     private fun loadBundle(savedInstanceState: Bundle?) {
@@ -209,11 +288,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
     private fun setupNavigationDrawer() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         b.navMain.setNavigationItemSelectedListener(this)
-    }
-
-    /* This function help to reduce code to access resource color */
-    private fun getResourceColor(colorResource: Int): Int {
-        return ContextCompat.getColor(this, colorResource)
     }
 
     private fun setOptionsButtonsVisibility(visible: Boolean) {
@@ -330,8 +404,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
                 }
 
                 override fun onItemLongClick(
-                    checkBox: MaterialCheckBox,
-                    zFile: ZFile
+                    checkBox: MaterialCheckBox, zFile: ZFile
                 ) {/* Open SnackBar */
                     if (!isSelectionModeActivated) {
                         enableSelectionMode()
@@ -390,13 +463,36 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun enableSelectionMode() {
+        val fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        fadeInAnimation.duration = 300
+
         isSelectionModeActivated = true
         fileAdapter.setShowCheckboxes(true)
 
         b.btnMenu.setImageResource(R.drawable.ic_close)
+        b.btnDelete.apply {
+            visibility = View.VISIBLE
+            animation = fadeInAnimation
+            isClickable = true
+        }
+
+        b.btnCopyPath.apply {
+            visibility = View.VISIBLE
+            animation = fadeInAnimation
+            isClickable = true
+        }
+
+        b.btnEncrypt.apply {
+            visibility = View.VISIBLE
+            animation = fadeInAnimation
+            isClickable = true
+        }
     }
 
     private fun disableSelectionMode() {
+        val fadeOutAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_out)
+        fadeOutAnimation.duration = 300
+
         isSelectionModeActivated = false
         fileAdapter.setShowCheckboxes(false)
 
@@ -408,6 +504,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
 
         b.btnMenu.setImageResource(R.drawable.ic_menu2)
         updateTitleTextView()
+
+        b.btnDelete.apply {
+            visibility = View.GONE
+            animation = fadeOutAnimation
+            isClickable = false
+        }
+
+        b.btnCopyPath.apply {
+            visibility = View.GONE
+            animation = fadeOutAnimation
+            isClickable = false
+        }
+
+        b.btnEncrypt.apply {
+            visibility = View.GONE
+            animation = fadeOutAnimation
+            isClickable = false
+        }
     }
 
     /**
@@ -454,8 +568,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
                 setTypeface(null, Typeface.BOLD)
 
                 layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
                 ).apply {
                     setMargins(0, 0, 20, 0)
                     setPadding(20)
@@ -472,9 +585,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
             // We use TypedValue.applyDimension to convert 20dp to pixels,
             // which ensures it looks correct on all screen densities.
             val cornerRadius = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                40F,
-                resources.displayMetrics
+                TypedValue.COMPLEX_UNIT_DIP, 40F, resources.displayMetrics
             )
 
             roundedCornerDrawable.cornerRadius = cornerRadius
